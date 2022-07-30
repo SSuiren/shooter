@@ -1,0 +1,83 @@
+
+#include <iostream>
+
+using namespace std;
+
+using namespace sf;
+
+#include <cstdint>
+
+#include <vector>
+
+#include <math.h>
+
+#include <SFML/Graphics.hpp>
+
+#include <SFML/Audio.hpp>
+
+class bullets
+{
+public:
+
+    CircleShape bullet;
+    Vector2f currVelocity;
+    float maxspeed;
+
+    bullets(float radius = 5.f)
+        : currVelocity(0.f, 0.f), maxspeed(10.f)
+    {
+        this->bullet.setRadius(radius);
+        this->bullet.setFillColor(Color::Red);
+    }
+
+};
+
+
+int main()
+{
+
+    RenderWindow window(VideoMode(800, 600), "360 shooter!", Style::Default);
+    window.setFramerateLimit(60);
+    //the players shape
+    CircleShape player(25.f);
+    //sets player color
+    player.setFillColor(Color::White);
+
+    //variables
+    Vector2f playercenter;
+    Vector2f mouseposwindow;
+    Vector2f aimdir;
+    Vector2f aimdirNorm;
+
+    while (window.isOpen())
+    {
+        Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == Event::Closed)
+                window.close();
+        }
+        //update
+        //gives position for player character
+        playercenter = Vector2f(player.getPosition().x + player.getRadius(), player.getPosition().y + player.getRadius());
+        //gives position of the mouse
+        mouseposwindow = Vector2f(Mouse::getPosition(window));
+        //gives mouse position and player for bullet to spawn
+        aimdir = mouseposwindow - playercenter;
+        //allows for the bullet travel the path it was shot
+        aimdirNorm = aimdir / float(sqrt(pow(aimdir.x, 2) + pow(aimdir.y, 2)));
+
+        cout << aimdirNorm.x << " " << aimdirNorm.y << "\n";
+
+
+
+        //draw
+        window.clear();
+
+        window.draw(player);
+
+        window.display();
+    }
+
+    return 0;
+}
